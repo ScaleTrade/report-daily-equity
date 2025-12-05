@@ -45,11 +45,11 @@ extern "C" void CreateReport(rapidjson::Value& request,
         std::cerr << "[EquityReportInterface]: " << e.what() << std::endl;
     }
 
-    std::cout << "SIZE: " << equity_vector.size() << std::endl;
+    std::cout << "1 SIZE: " << equity_vector.size() << std::endl;
 
     std::vector<EquityRecord> agg_equity_vector = utils::AverageByLogin(equity_vector);
 
-    std::cout << "SIZE: " << agg_equity_vector.size() << std::endl;
+    std::cout << "2 SIZE: " << agg_equity_vector.size() << std::endl;
 
     //  v.1
     auto create_table = [&](const std::vector<EquityRecord>& equities) -> Node {
@@ -77,25 +77,25 @@ extern "C" void CreateReport(rapidjson::Value& request,
         }));
 
         // Tbody
-        for (const auto& equity_record : equities) {
-            tbody_rows.push_back(tr({
-                td({div({text(std::to_string(equity_record.login))})}),
-                td({div({text(utils::FormatTimestampToString(equity_record.create_time))})}),
-                td({div({text(equity_record.group)})}),
-                td({div({text(std::to_string(equity_record.leverage))})}),
-                td({div({text(std::to_string(equity_record.balance))})}),
-                td({div({text(std::to_string(equity_record.prevbalance))})}),
-                td({div({text(std::to_string(equity_record.credit))})}),
-                td({div({text(std::to_string(equity_record.equity))})}),
-                td({div({text(std::to_string(equity_record.profit))})}),
-                td({div({text(std::to_string(equity_record.storage))})}),
-                td({div({text(std::to_string(equity_record.commission))})}),
-                td({div({text(std::to_string(equity_record.margin))})}),
-                td({div({text(std::to_string(equity_record.margin_free))})}),
-                td({div({text(std::to_string(equity_record.margin_level))})}),
-                td({div({text(equity_record.currency)})}),
-            }));
-        }
+        // for (const auto& equity_record : equities) {
+        //     tbody_rows.push_back(tr({
+        //         td({div({text(std::to_string(equity_record.login))})}),
+        //         td({div({text(utils::FormatTimestampToString(equity_record.create_time))})}),
+        //         td({div({text(equity_record.group)})}),
+        //         td({div({text(std::to_string(equity_record.leverage))})}),
+        //         td({div({text(std::to_string(equity_record.balance))})}),
+        //         td({div({text(std::to_string(equity_record.prevbalance))})}),
+        //         td({div({text(std::to_string(equity_record.credit))})}),
+        //         td({div({text(std::to_string(equity_record.equity))})}),
+        //         td({div({text(std::to_string(equity_record.profit))})}),
+        //         td({div({text(std::to_string(equity_record.storage))})}),
+        //         td({div({text(std::to_string(equity_record.commission))})}),
+        //         td({div({text(std::to_string(equity_record.margin))})}),
+        //         td({div({text(std::to_string(equity_record.margin_free))})}),
+        //         td({div({text(std::to_string(equity_record.margin_level))})}),
+        //         td({div({text(equity_record.currency)})}),
+        //     }));
+        // }
 
         return table({
             thead(thead_rows),
