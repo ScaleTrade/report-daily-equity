@@ -13,4 +13,6 @@ namespace utils {
               rapidjson::Document::AllocatorType& allocator);
 
     std::string FormatTimestampToString(const time_t timestamp);
+
+    std::vector<EquityRecord> AverageByLogin(const std::vector<EquityRecord>& records);
 }

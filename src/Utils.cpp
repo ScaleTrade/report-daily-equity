@@ -104,4 +104,61 @@ namespace utils {
         oss << std::put_time(&tm, "%Y.%m.%d %H:%M:%S");
         return oss.str();
     }
+
+    std::vector<EquityRecord> AverageByLogin(const std::vector<EquityRecord>& records) {
+        struct Agg {
+            EquityRecord sum{};
+            size_t count = 0;
+        };
+
+        std::unordered_map<int, Agg> temp;
+        temp.reserve(records.size() / 4);
+
+        for (const auto& r : records) {
+            auto& a = temp[r.login];
+            a.count++;
+
+            a.sum.balance      += r.balance;
+            a.sum.prevbalance  += r.prevbalance;
+            a.sum.credit       += r.credit;
+            a.sum.equity       += r.equity;
+            a.sum.profit       += r.profit;
+            a.sum.storage      += r.storage;
+            a.sum.commission   += r.commission;
+            a.sum.margin       += r.margin;
+            a.sum.margin_free  += r.margin_free;
+            a.sum.margin_level += r.margin_level;
+
+            if (a.count == 1) {
+                a.sum.login       = r.login;
+                a.sum.create_time = r.create_time;
+                a.sum.group       = r.group;
+                a.sum.leverage    = r.leverage;
+                a.sum.currency    = r.currency;
+            }
+        }
+
+        std::vector<EquityRecord> result;
+        result.reserve(temp.size());
+
+        for (auto& [login, agg] : temp) {
+            double k = 1.0 / agg.count;
+            EquityRecord rec = agg.sum;
+
+            rec.balance      *= k;
+            rec.prevbalance  *= k;
+            rec.credit       *= k;
+            rec.equity       *= k;
+            rec.profit       *= k;
+            rec.storage      *= k;
+            rec.commission   *= k;
+            rec.margin       *= k;
+            rec.margin_free  *= k;
+            rec.margin_level *= k;
+
+            result.push_back(std::move(rec));
+        }
+
+        return result;
+    }
 }
