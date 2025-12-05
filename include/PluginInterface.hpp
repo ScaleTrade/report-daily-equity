@@ -11,6 +11,8 @@
 #include <unordered_map>
 #include "Structures.hpp"
 #include "ast/Ast.hpp"
+#include "sbxTableBuilder/SBXTableBuilder.hpp"
+#include "PluginStructures.hpp"
 #include "Utils.hpp"
 
 extern "C" {

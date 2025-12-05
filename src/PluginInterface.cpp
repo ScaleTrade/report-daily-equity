@@ -22,10 +22,6 @@ extern "C" void CreateReport(rapidjson::Value& request,
                              rapidjson::Value& response,
                              rapidjson::Document::AllocatorType& allocator,
                              CServerInterface* server) {
-    // Структура накопления итогов
-    struct Total {
-    };
-
     std::unordered_map<std::string, Total> totals_map;
 
     std::string group_mask;
@@ -50,6 +46,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
     }
 
     std::cout << "SIZE: " << equity_vector.size() << std::endl;
+
 
     const Node report = div({
         h1({text("Equity Report") }),
