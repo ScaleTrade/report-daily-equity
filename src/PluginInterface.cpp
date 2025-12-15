@@ -45,12 +45,12 @@ extern "C" void CreateReport(rapidjson::Value& request,
         std::cerr << "[EquityReportInterface]: " << e.what() << std::endl;
     }
 
-    std::cout << "Equity мector SIZE: " << equity_vector.size() << std::endl;
+    std::cout << "Equity vector SIZE: " << equity_vector.size() << std::endl;
 
     // Костыль для показа
-    std::vector<EquityRecord> agg_equity_vector = utils::AggregateAverageEquityByLogin(equity_vector);
+    std::vector<EquityRecord> aggregated_equity_vector = utils::AggregateAverageEquityByLogin(equity_vector);
 
-    std::cout << "Agg equity vector SIZE: " << agg_equity_vector.size() << std::endl;
+    std::cout << "Aggregate equity vector SIZE: " << aggregated_equity_vector.size() << std::endl;
 
     TableBuilder table_builder("EquityReportTable");
 
@@ -78,7 +78,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
     table_builder.AddColumn({"margin_level", "MARGIN_LEVEL", 14});
     table_builder.AddColumn({"currency", "CURRENCY", 15});
 
-    for (const auto& equity_record : agg_equity_vector) {
+    for (const auto& equity_record : aggregated_equity_vector) {
         table_builder.AddRow({
             {"login", utils::TruncateDouble(equity_record.login, 0)},
             {"create_time", utils::FormatTimestampToString(equity_record.create_time)},
