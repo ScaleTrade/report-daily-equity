@@ -131,7 +131,7 @@ namespace utils {
             auto& a = temp[r.login];
             a.count++;
 
-            a.sum.balance      z+= r.balance;
+            a.sum.balance      += r.balance;
             a.sum.prevbalance  += r.prevbalance;
             a.sum.credit       += r.credit;
             a.sum.equity       += r.equity;
