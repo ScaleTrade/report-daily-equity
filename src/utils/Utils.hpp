@@ -4,6 +4,8 @@
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+#include <unordered_map>
+#include <unordered_set>
 #include "Structures.hpp"
 #include "structures/PluginStructures.hpp"
 #include "ast/Ast.hpp"

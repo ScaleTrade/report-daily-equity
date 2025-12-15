@@ -118,31 +118,94 @@ namespace utils {
         return "N/A";   // группа не найдена - валюта не определена
     }
 
+    // v.1
+    // std::vector<EquityRecord> AggregateAverageEquityByLogin(const std::vector<EquityRecord>& records) {
+    //     std::unordered_map<int, AverageEquity> temp;
+    //     temp.reserve(records.size() / 4);
+    //
+    //     for (const auto& r : records) {
+    //         auto& a = temp[r.login];
+    //         a.count++;
+    //
+    //         a.sum.balance += r.balance;
+    //         a.sum.prevbalance += r.prevbalance;
+    //         a.sum.credit += r.credit;
+    //         a.sum.equity += r.equity;
+    //         a.sum.profit += r.profit;
+    //         a.sum.storage += r.storage;
+    //         a.sum.commission += r.commission;
+    //         a.sum.margin += r.margin;
+    //         a.sum.margin_free += r.margin_free;
+    //         a.sum.margin_level += r.margin_level;
+    //
+    //         if (a.count == 1) {
+    //             a.sum.login = r.login;
+    //             a.sum.create_time = r.create_time;
+    //             a.sum.group = r.group;
+    //             a.sum.leverage = r.leverage;
+    //             a.sum.currency = r.currency;
+    //         }
+    //     }
+    //
+    //     std::vector<EquityRecord> result;
+    //     result.reserve(temp.size());
+    //
+    //     for (auto& [login, agg] : temp) {
+    //         double k = 1.0 / agg.count;
+    //         EquityRecord rec = agg.sum;
+    //
+    //         rec.balance *= k;
+    //         rec.prevbalance *= k;
+    //         rec.credit *= k;
+    //         rec.equity *= k;
+    //         rec.profit *= k;
+    //         rec.storage *= k;
+    //         rec.commission *= k;
+    //         rec.margin *= k;
+    //         rec.margin_free *= k;
+    //         rec.margin_level *= k;
+    //
+    //         result.push_back(std::move(rec));
+    //     }
+    //
+    //     return result;
+    // }
+
+    // v.2
     std::vector<EquityRecord> AggregateAverageEquityByLogin(const std::vector<EquityRecord>& records) {
+        std::unordered_set<int> unique_logins;
+        unique_logins.reserve(records.size());
+
+        for (const auto& record : records) {
+            unique_logins.insert(record.login);
+        }
+
         std::unordered_map<int, AverageEquity> temp;
-        temp.reserve(records.size() / 4);
+        temp.reserve(unique_logins.size());
 
         for (const auto& r : records) {
-            auto& a = temp[r.login];
+            auto [it, inserted] = temp.try_emplace(r.login);
+            auto& a = it->second;
+
             a.count++;
 
-            a.sum.balance += r.balance;
-            a.sum.prevbalance += r.prevbalance;
-            a.sum.credit += r.credit;
-            a.sum.equity += r.equity;
-            a.sum.profit += r.profit;
-            a.sum.storage += r.storage;
-            a.sum.commission += r.commission;
-            a.sum.margin += r.margin;
-            a.sum.margin_free += r.margin_free;
+            a.sum.balance      += r.balance;
+            a.sum.prevbalance  += r.prevbalance;
+            a.sum.credit       += r.credit;
+            a.sum.equity       += r.equity;
+            a.sum.profit       += r.profit;
+            a.sum.storage      += r.storage;
+            a.sum.commission   += r.commission;
+            a.sum.margin       += r.margin;
+            a.sum.margin_free  += r.margin_free;
             a.sum.margin_level += r.margin_level;
 
             if (a.count == 1) {
-                a.sum.login = r.login;
+                a.sum.login       = r.login;
                 a.sum.create_time = r.create_time;
-                a.sum.group = r.group;
-                a.sum.leverage = r.leverage;
-                a.sum.currency = r.currency;
+                a.sum.group       = r.group;
+                a.sum.leverage    = r.leverage;
+                a.sum.currency    = r.currency;
             }
         }
 
@@ -153,15 +216,15 @@ namespace utils {
             double k = 1.0 / agg.count;
             EquityRecord rec = agg.sum;
 
-            rec.balance *= k;
-            rec.prevbalance *= k;
-            rec.credit *= k;
-            rec.equity *= k;
-            rec.profit *= k;
-            rec.storage *= k;
-            rec.commission *= k;
-            rec.margin *= k;
-            rec.margin_free *= k;
+            rec.balance      *= k;
+            rec.prevbalance  *= k;
+            rec.credit       *= k;
+            rec.equity       *= k;
+            rec.profit       *= k;
+            rec.storage      *= k;
+            rec.commission   *= k;
+            rec.margin       *= k;
+            rec.margin_free  *= k;
             rec.margin_level *= k;
 
             result.push_back(std::move(rec));
@@ -169,6 +232,7 @@ namespace utils {
 
         return result;
     }
+
 
     // Костыль для показа
     std::vector<EquityRecord> GetFirst100Records(const std::vector<EquityRecord>& records) {
