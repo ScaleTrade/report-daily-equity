@@ -45,12 +45,12 @@ extern "C" void CreateReport(rapidjson::Value& request,
         std::cerr << "[EquityReportInterface]: " << e.what() << std::endl;
     }
 
-    std::cout << "EquityVector SIZE: " << equity_vector.size() << std::endl;
+    std::cout << "Equity мector SIZE: " << equity_vector.size() << std::endl;
 
     // Костыль для показа
-    std::vector<EquityRecord> agg_equity_vector = utils::GetFirst100Records(equity_vector);
+    std::vector<EquityRecord> agg_equity_vector = utils::AggregateAverageByLogin(equity_vector);
 
-    std::cout << "agg_equity_vector SIZE: " << agg_equity_vector.size() << std::endl;
+    std::cout << "Agg equity vector SIZE: " << agg_equity_vector.size() << std::endl;
 
     TableBuilder table_builder("EquityReportTable");
 
@@ -59,6 +59,8 @@ extern "C" void CreateReport(rapidjson::Value& request,
     table_builder.EnableRefreshButton(false);
     table_builder.EnableBookmarksButton(false);
     table_builder.EnableExportButton(true);
+    table_builder.EnableTotal(true);
+    table_builder.SetTotalDataTitle("TOTAL");
 
     table_builder.AddColumn({"login", "LOGIN", 1});
     table_builder.AddColumn({"create_time", "CREATE_TIME", 2});
@@ -97,7 +99,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
     const JSONObject table_props = table_builder.CreateTableProps();
     const Node table_node = Table({}, table_props);
 
-    const Node report = div({
+    const Node report = Column({
         h1({text("Equity Report") }),
         table_node
     });

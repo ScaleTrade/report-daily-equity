@@ -118,7 +118,7 @@ namespace utils {
         return "N/A";   // группа не найдена - валюта не определена
     }
 
-    std::vector<EquityRecord> AverageByLogin(const std::vector<EquityRecord>& records) {
+    std::vector<EquityRecord> AggregateAverageByLogin(const std::vector<EquityRecord>& records) {
         struct Agg {
             EquityRecord sum{};
             size_t count = 0;
@@ -131,7 +131,7 @@ namespace utils {
             auto& a = temp[r.login];
             a.count++;
 
-            a.sum.balance      += r.balance;
+            a.sum.balance      z+= r.balance;
             a.sum.prevbalance  += r.prevbalance;
             a.sum.credit       += r.credit;
             a.sum.equity       += r.equity;
