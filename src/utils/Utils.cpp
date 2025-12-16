@@ -24,7 +24,7 @@ namespace utils {
             text_object.AddMember("type", "#text", allocator);
 
             Value props(kObjectType);
-            props.AddMember("value", "Equity report", allocator);
+            props.AddMember("value", "Daily Equity report", allocator);
 
             text_object.AddMember("props", props, allocator);
             children.PushBack(text_object, allocator);
