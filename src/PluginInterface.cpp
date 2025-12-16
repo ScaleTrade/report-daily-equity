@@ -71,6 +71,8 @@ extern "C" void CreateReport(rapidjson::Value& request,
     table_builder.AddColumn({"margin_level", "MARGIN_LEVEL", 15});
     table_builder.AddColumn({"currency", "CURRENCY", 16});
 
+    totals_map["USD"].currency = "USD";
+
     for (const auto& equity_record : equity_vector) {
         double floating_pl = 0.0;
 
