@@ -12,17 +12,6 @@ struct TableColumn {
     double order = 0.0;
     bool is_exported = true;
     bool is_sorted = true;
-
-    TableColumn(const std::string& key,
-                const std::string& language_token,
-                const double& order = 0.0,
-                const bool& is_exported = true,
-                const bool& is_sorted = true)
-        : key(key),
-          language_token(language_token),
-          order(order),
-          is_exported(is_exported),
-          is_sorted(is_sorted){}
 };
 
 class TableBuilder {
@@ -31,7 +20,7 @@ public:
         : _table_name(table_name) {}
 
     void AddColumn(const TableColumn& column) {
-        _column_order.push_back(column.key);
+        _column_order_by_keys.push_back(column.key);
 
         JSONObject column_obj;
         column_obj["name"] = column.language_token;
@@ -48,9 +37,11 @@ public:
     void AddRow(const std::vector<JSONValue>& row_values) {
         JSONArray json_row;
         json_row.reserve(row_values.size());
+        
         for (const auto& val : row_values) {
             json_row.push_back(val);
         }
+
         _rows.push_back(std::move(json_row));
     }
 
@@ -60,13 +51,15 @@ public:
         _order_by = {column, order};
     }
 
-    void EnableRefreshButton(const bool& enabled) { _show_refresh_button = enabled; }
+    void EnableAutoSave(const bool& enabled) { _is_total_row_enabled = enabled; }
 
-    void EnableBookmarksButton(const bool& enabled) { _show_bookmarks_button = enabled; }
+    void EnableRefreshButton(const bool& enabled) { _is_refresh_button_enabled = enabled; }
 
-    void EnableExportButton(const bool& enabled) { _show_export_button = enabled; }
+    void EnableBookmarksButton(const bool& enabled) { _is_bookmarks_button_enabled = enabled; }
 
-    void EnableTotal(const bool& enabled) { _show_total = enabled; }
+    void EnableExportButton(const bool& enabled) { _is_export_button_enabled = enabled; }
+
+    void EnableTotal(const bool& enabled) { _is_total_row_enabled = enabled; }
 
     void SetTotalDataTitle(const std::string& title) { _total_data_title = title; }
 
@@ -77,10 +70,11 @@ public:
         table_props["name"] = _table_name;
         table_props["idCol"] = _id_column;
         table_props["orderBy"] = JSONArray{_order_by.first, _order_by.second};
-        table_props["showRefreshBtn"] = _show_refresh_button;
-        table_props["showBookmarksBtn"] = _show_bookmarks_button;
-        table_props["showExportBtn"] = _show_export_button;
-        table_props["showTotal"] = _show_total;
+        table_props["autoSave"] = _is_auto_save_enabled;
+        table_props["showRefreshBtn"] = _is_refresh_button_enabled;
+        table_props["showBookmarksBtn"] = _is_bookmarks_button_enabled;
+        table_props["showExportBtn"] = _is_export_button_enabled;
+        table_props["showTotal"] = _is_total_row_enabled;
         table_props["totalDataTitle"] = _total_data_title;
 
         if (!_total_data.empty()) {
@@ -92,17 +86,17 @@ public:
         json_rows.reserve(_rows.size());
 
         for (const auto& row : _rows) {
-            json_rows.push_back(row);
+            json_rows.emplace_back(row);
         }
 
         data_obj["rows"] = std::move(json_rows);
 
 
         JSONArray structure_keys;
-        structure_keys.reserve(_column_order.size());
+        structure_keys.reserve(_column_order_by_keys.size());
 
-        for (const auto& key : _column_order) {
-            structure_keys.push_back(key);
+        for (const auto& key : _column_order_by_keys) {
+            structure_keys.emplace_back(key);
         }
 
         data_obj["structure"] = std::move(structure_keys);
@@ -114,19 +108,16 @@ public:
 
 private:
     std::string _table_name;
-
-    std::vector<std::string> _column_order;
-
+    std::string _id_column;
+    std::vector<std::string> _column_order_by_keys;
     std::vector<JSONArray> _rows;
     JSONObject _structure;
-
-    std::string _id_column;
     std::pair<std::string, std::string> _order_by{"id", "DESC"};
-
-    bool _show_refresh_button = true;
-    bool _show_bookmarks_button = true;
-    bool _show_export_button = true;
-    bool _show_total = false;
+    bool _is_auto_save_enabled = false;
+    bool _is_refresh_button_enabled = true;
+    bool _is_bookmarks_button_enabled = true;
+    bool _is_export_button_enabled = true;
+    bool _is_total_row_enabled = false;
     std::string _total_data_title;
     JSONArray _total_data;
 };

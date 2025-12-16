@@ -48,6 +48,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
 
     table_builder.SetIdColumn("login");
     table_builder.SetOrderBy("login", "DESC");
+    table_builder.EnableAutoSave(false);
     table_builder.EnableRefreshButton(false);
     table_builder.EnableBookmarksButton(false);
     table_builder.EnableExportButton(true);
@@ -95,25 +96,25 @@ extern "C" void CreateReport(rapidjson::Value& request,
         totals_map["USD"].balance += equity_record.balance * multiplier;
         totals_map["USD"].prevbalance += equity_record.prevbalance * multiplier;
         totals_map["USD"].storage += equity_record.storage * multiplier;
+        totals_map["USD"].commission += equity_record.commission * multiplier;
         totals_map["USD"].margin += equity_record.margin * multiplier;
         totals_map["USD"].margin_free += equity_record.margin_free * multiplier;
-
 
         table_builder.AddRow({
             utils::TruncateDouble(equity_record.login, 0),
             utils::FormatTimestampToString(equity_record.create_time),
             equity_record.group,
             utils::TruncateDouble(equity_record.leverage, 0),
-            utils::TruncateDouble(equity_record.balance, 2),
-            utils::TruncateDouble(equity_record.prevbalance, 2),
-            utils::TruncateDouble(floating_pl, 2),
-            utils::TruncateDouble(equity_record.credit, 2),
-            utils::TruncateDouble(equity_record.equity, 2),
-            utils::TruncateDouble(equity_record.profit, 2),
-            utils::TruncateDouble(equity_record.storage, 2),
-            utils::TruncateDouble(equity_record.commission, 2),
-            utils::TruncateDouble(equity_record.margin, 2),
-            utils::TruncateDouble(equity_record.margin_free, 2),
+            utils::TruncateDouble(equity_record.balance * multiplier, 2),
+            utils::TruncateDouble(equity_record.prevbalance * multiplier, 2),
+            utils::TruncateDouble(floating_pl * multiplier, 2),
+            utils::TruncateDouble(equity_record.credit * multiplier, 2),
+            utils::TruncateDouble(equity_record.equity * multiplier, 2),
+            utils::TruncateDouble(equity_record.profit * multiplier, 2),
+            utils::TruncateDouble(equity_record.storage * multiplier, 2),
+            utils::TruncateDouble(equity_record.commission * multiplier, 2),
+            utils::TruncateDouble(equity_record.margin * multiplier, 2),
+            utils::TruncateDouble(equity_record.margin_free * multiplier, 2),
             utils::TruncateDouble(equity_record.margin_level, 2),
             "USD"
         });
@@ -129,6 +130,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
         {"prevbalance", utils::TruncateDouble(totals_map["USD"].prevbalance, 2)},
         {"balance", utils::TruncateDouble(totals_map["USD"].balance, 2)},
         {"storage", utils::TruncateDouble(totals_map["USD"].storage, 2)},
+        {"commission", utils::TruncateDouble(totals_map["USD"].commission, 2)},
         {"margin", utils::TruncateDouble(totals_map["USD"].margin, 2)},
         {"margin_free", utils::TruncateDouble(totals_map["USD"].margin_free, 2)},
         {"currency", totals_map["USD"].currency},
@@ -140,7 +142,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
     const Node table_node = Table({}, table_props);
 
     const Node report = Column({
-        h1({text("Daily Equity Report") }),
+        h1({text("Daily Equity Report")}),
         table_node
     });
 

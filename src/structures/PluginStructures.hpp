@@ -12,6 +12,7 @@ struct Total {
     double prevbalance;
     double balance;
     double storage;
+    double commission;
     double margin;
     double margin_free;
 };
