@@ -126,10 +126,27 @@ public:
     [[nodiscard]] JSONObject CreateTablePropsCompact() const {
         JSONObject table_props;
         table_props["name"] = _table_name;
-        table_props["rows"] = _compact_rows;
-        table_props["structure"] = _column_order;
+
+        JSONArray json_rows;
+        for (const auto& row : _compact_rows) {
+            JSONArray json_row;
+            for (const auto& value : row) {
+                json_row.push_back(value);
+            }
+            json_rows.emplace_back(json_row);
+        }
+        table_props["rows"] = json_rows;
+
+        // structure: тоже в JSONArray
+        JSONArray structure;
+        for (const auto& col : _column_order) {
+            structure.emplace_back(col);
+        }
+        table_props["structure"] = structure;
+
         return table_props;
     }
+
 
 private:
     std::string _table_name;
