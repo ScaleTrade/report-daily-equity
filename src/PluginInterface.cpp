@@ -131,6 +131,8 @@ extern "C" void CreateReport(rapidjson::Value& request,
         {"margin_free", utils::TruncateDouble(totals_map["USD"].margin_free, 2)},
     });
 
+    table_builder.SetTotalData(totals_array);
+
     const JSONObject table_props = table_builder.CreateTableProps();
     const Node table_node = Table({}, table_props);
 
