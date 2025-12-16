@@ -140,7 +140,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
     const Node table_node = Table({}, table_props);
 
     const Node report = Column({
-        h1({text("Equity Report") }),
+        h1({text("Daily Equity Report") }),
         table_node
     });
 
