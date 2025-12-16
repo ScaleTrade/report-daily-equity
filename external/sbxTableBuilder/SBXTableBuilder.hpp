@@ -68,8 +68,6 @@ public:
         }
 
         JSONObject data_obj;
-
-        // --- rows ---
         JSONArray json_rows;
         json_rows.reserve(_rows.size());
         for (const auto& row : _rows) {
@@ -77,9 +75,16 @@ public:
         }
         data_obj["rows"] = std::move(json_rows);
 
-        data_obj["structure"] = _structure;
 
+        JSONArray structure_keys;
+        structure_keys.reserve(_column_order.size());
+        for (const auto& key : _column_order) {
+            structure_keys.push_back(key);
+        }
+        data_obj["structure"] = std::move(structure_keys);
         table_props["data"] = std::move(data_obj);
+        table_props["structure"] = _structure;
+
         return table_props;
     }
 

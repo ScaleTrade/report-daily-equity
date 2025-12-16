@@ -94,8 +94,6 @@ extern "C" void CreateReport(rapidjson::Value& request,
     //
     // const JSONObject table_props = table_builder.CreateTablePropsCompact();
 
-
-
     // v.2
     TableBuilder table_builder("EquityReportTable");
 
