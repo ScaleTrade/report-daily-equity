@@ -55,6 +55,7 @@ public:
 
     void SetTotalData(const JSONArray& total_data) { _total_data = total_data; }
 
+    // --- Создание компактного JSON с data.rows и data.structure ---
     [[nodiscard]] JSONObject CreateTableProps() const {
         JSONObject table_props;
         table_props["name"] = _table_name;
@@ -70,6 +71,8 @@ public:
             table_props["totalData"] = _total_data;
         }
 
+        JSONObject data_obj;
+
         JSONArray json_rows;
         json_rows.reserve(_rows.size());
         for (const auto& row : _rows) {
@@ -80,18 +83,16 @@ public:
             }
             json_rows.push_back(std::move(json_row));
         }
-        table_props["rows"] = std::move(json_rows);
+        data_obj["rows"] = std::move(json_rows);
 
         JSONArray structure;
         structure.reserve(_column_order.size());
-        for (size_t i = 0; i < _column_order.size(); ++i) {
-            JSONObject col;
-            col["key"] = _column_order[i];
-            col["name"] = _column_tokens[i];
-            col["order"] = _column_positions[i];
-            structure.push_back(std::move(col));
+        for (const auto& key : _column_order) {
+            structure.push_back(key);
         }
-        table_props["structure"] = std::move(structure);
+        data_obj["structure"] = std::move(structure);
+
+        table_props["data"] = std::move(data_obj);
 
         return table_props;
     }
