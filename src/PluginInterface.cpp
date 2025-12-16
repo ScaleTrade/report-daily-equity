@@ -68,7 +68,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
     table_builder.AddColumn({"commission", "COMMISSION", 12});
     table_builder.AddColumn({"margin", "MARGIN", 13});
     table_builder.AddColumn({"margin_free", "MARGIN_FREE", 14});
-    table_builder.AddColumn({"margin_level", "MARGIN_LEVEL", 15});
+    table_builder.AddColumn({"margin_level", "MARGIN_LEVEL (%)", 15});
     table_builder.AddColumn({"currency", "CURRENCY", 16});
 
     totals_map["USD"].currency = "USD";
