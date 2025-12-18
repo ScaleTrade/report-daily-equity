@@ -44,7 +44,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
         std::cerr << "[DailyEquityReportInterface]: " << e.what() << std::endl;
     }
 
-    TableBuilder table_builder("EquityReportTable");
+    TableBuilder table_builder("DailyEquityReportTable");
 
     table_builder.SetIdColumn("login");
     table_builder.SetOrderBy("login", "DESC");
@@ -78,6 +78,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
         double floating_pl = 0.0;
 
         double multiplier = 1.0;
+
 
         if (equity_record.currency != "USD") {
             try {
