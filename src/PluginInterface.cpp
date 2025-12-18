@@ -58,7 +58,6 @@ extern "C" void CreateReport(rapidjson::Value& request,
     table_builder.AddColumn({"login", "LOGIN", 1});
     table_builder.AddColumn({"create_time", "CREATE_TIME", 2});
     table_builder.AddColumn({"group", "GROUP", 3});
-    table_builder.AddColumn({"leverage", "LEVERAGE", 4});
     table_builder.AddColumn({"balance", "BALANCE", 5});
     table_builder.AddColumn({"prevbalance", "PREV_BALANCE", 6});
     table_builder.AddColumn({"floating_pl", "FLOATING_PL", 7});
@@ -105,7 +104,6 @@ extern "C" void CreateReport(rapidjson::Value& request,
             utils::TruncateDouble(equity_record.login, 0),
             utils::FormatTimestampToString(equity_record.create_time),
             equity_record.group,
-            utils::TruncateDouble(equity_record.leverage, 0),
             utils::TruncateDouble(equity_record.balance * multiplier, 2),
             utils::TruncateDouble(equity_record.prevbalance * multiplier, 2),
             utils::TruncateDouble(floating_pl * multiplier, 2),
