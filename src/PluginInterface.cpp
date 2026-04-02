@@ -76,8 +76,9 @@ extern "C" void CreateReport(rapidjson::Value&                   request,
 
     // Columns
     table_builder.AddColumn({"login", "LOGIN", 1, search_filter});
-    table_builder.AddColumn({"create_time", "CREATE_TIME", 2, date_time_filter});
-    table_builder.AddColumn({"group", "GROUP", 3, group_select_filter});
+    table_builder.AddColumn({"login", "NAME", 2, search_filter});
+    table_builder.AddColumn({"create_time", "CREATE_TIME", 3, date_time_filter});
+    table_builder.AddColumn({"group", "GROUP", 4, group_select_filter});
     table_builder.AddColumn({"balance", "BALANCE", 5, search_filter});
     table_builder.AddColumn({"prevbalance", "PREV_BALANCE", 6, search_filter});
     table_builder.AddColumn({"floating_pl", "FLOATING_PL", 7, search_filter});
@@ -94,9 +95,15 @@ extern "C" void CreateReport(rapidjson::Value&                   request,
     totals_map["USD"].currency = "USD";
 
     for (const auto& equity_record : equity_vector) {
-        double floating_pl = 0.0;
+        AccountRecord account_record{};
+        double        floating_pl = 0.0;
+        double        multiplier  = 1.0;
 
-        double multiplier = 1.0;
+        try {
+            server->GetAccountByLogin(equity_record.login, &account_record);
+        } catch (const std::exception& e) {
+            std::cerr << "[DailyEquityReportInterface]: " << e.what() << std::endl;
+        }
 
         if (equity_record.currency != "USD") {
             try {
@@ -121,6 +128,7 @@ extern "C" void CreateReport(rapidjson::Value&                   request,
         totals_map["USD"].margin_free += equity_record.margin_free * multiplier;
 
         table_builder.AddRow({utils::TruncateDouble(equity_record.login, 0),
+                              account_record.name,
                               utils::FormatTimestampToString(equity_record.create_time),
                               equity_record.group,
                               utils::TruncateDouble(equity_record.balance * multiplier, 2),
