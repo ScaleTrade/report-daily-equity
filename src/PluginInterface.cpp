@@ -5,7 +5,7 @@ using namespace ast;
 extern "C" void AboutReport(rapidjson::Value&                   request,
                             rapidjson::Value&                   response,
                             rapidjson::Document::AllocatorType& allocator,
-                            CServerInterface*                   server) {
+                            ReportServerInterface*              server) {
     response.AddMember("version", 1, allocator);
     response.AddMember("name", Value().SetString("Daily Equity report", allocator), allocator);
     response.AddMember(
@@ -15,7 +15,8 @@ extern "C" void AboutReport(rapidjson::Value&                   request,
                           "allowing you to generate reports for customizable groups.",
                           allocator),
         allocator);
-    response.AddMember("type", REPORT_DAILY_GROUP_TYPE, allocator);
+    response.AddMember("type", static_cast<int>(ReportType::DailyGroup), allocator);
+    response.AddMember("key", Value().SetString("DAILY_EQUITY_REPORT", allocator), allocator);
 }
 
 extern "C" void DestroyReport() {}
@@ -23,7 +24,7 @@ extern "C" void DestroyReport() {}
 extern "C" void CreateReport(rapidjson::Value&                   request,
                              rapidjson::Value&                   response,
                              rapidjson::Document::AllocatorType& allocator,
-                             CServerInterface*                   server) {
+                             ReportServerInterface*              server) {
     std::string group_mask;
     int         from;
     int         to;
@@ -37,8 +38,8 @@ extern "C" void CreateReport(rapidjson::Value&                   request,
         to = request["to"].GetInt();
     }
 
-    std::vector<EquityRecord>              equity_vector;
-    std::vector<GroupRecord>               group_vector;
+    std::vector<ReportEquityRecord>        equity_vector;
+    std::vector<ReportGroupRecord>         group_vector;
     std::unordered_map<std::string, Total> totals_map;
 
     try {
@@ -95,9 +96,9 @@ extern "C" void CreateReport(rapidjson::Value&                   request,
     totals_map["USD"].currency = "USD";
 
     for (const auto& equity_record : equity_vector) {
-        AccountRecord account_record{};
-        double        floating_pl = 0.0;
-        double        multiplier  = 1.0;
+        ReportAccountRecord account_record{};
+        double              floating_pl = 0.0;
+        double              multiplier  = 1.0;
 
         try {
             server->GetAccountByLogin(equity_record.login, &account_record);
@@ -107,8 +108,10 @@ extern "C" void CreateReport(rapidjson::Value&                   request,
 
         if (equity_record.currency != "USD") {
             try {
-                server->CalculateConvertRateByCurrency(
-                    equity_record.currency, "USD", OP_SELL, &multiplier);
+                server->CalculateConvertRateByCurrency(equity_record.currency,
+                                                       "USD",
+                                                       static_cast<int>(ReportTradeCommand::Sell),
+                                                       &multiplier);
             } catch (const std::exception& e) {
                 std::cerr << "[DailyEquityReportInterface]: " << e.what() << std::endl;
             }

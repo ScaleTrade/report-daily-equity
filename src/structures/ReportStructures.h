@@ -1,8 +1,7 @@
 #pragma once
 
-#include <string>
-
 #include <Structures.h>
+#include <string>
 
 struct Total {
     std::string currency;

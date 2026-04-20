@@ -4,7 +4,7 @@ project(DailyEquityReport)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file(GLOB_RECURSE UTILS_SOURCE src/utils/*.cpp)
+file(GLOB_RECURSE UTILS_SOURCE      src/utils/*.cpp)
 file(GLOB_RECURSE STRUCTURES_SOURCE src/structures/*.cpp)
 
 set(SOURCES
@@ -17,7 +17,5 @@ add_library(DailyEquityReport SHARED ${SOURCES})
 
 target_include_directories(DailyEquityReport PRIVATE
         ${CMAKE_SOURCE_DIR}/include
-        ${CMAKE_SOURCE_DIR}/api
-        ${CMAKE_SOURCE_DIR}/external
         ${CMAKE_SOURCE_DIR}/src
 )

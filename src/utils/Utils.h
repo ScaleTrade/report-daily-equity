@@ -7,10 +7,12 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Structures.h"
+#include "ReportServerInterface.h"
 #include "ast/Ast.hpp"
-#include "structures/PluginStructures.h"
-#include <rapidjson/document.h>
+#include "rapidjson/document.h"
+#include "structures/ReportStructures.h"
+
+using namespace ast;
 
 namespace utils {
     void CreateUI(const ast::Node&                    node,
