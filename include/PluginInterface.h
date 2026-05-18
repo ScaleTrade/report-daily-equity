@@ -18,7 +18,11 @@
 #include "utils/Utils.h"
 #include "structures/ReportType.h"
 
+using namespace ast;
+
 extern "C" {
+    int GetReportApiVersion();
+
     void AboutReport(rapidjson::Value& request,
                      rapidjson::Value& response,
                      rapidjson::Document::AllocatorType& allocator,
