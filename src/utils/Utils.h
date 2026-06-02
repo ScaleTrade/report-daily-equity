@@ -6,6 +6,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <unordered_set>
+#include <set>
 
 #include "ReportServerInterface.h"
 #include "ast/Ast.hpp"
@@ -23,4 +24,8 @@ namespace utils {
                                         const std::string& format = "%Y.%m.%d %H:%M:%S");
 
     double TruncateDouble(const double& value, const int& digits);
+
+    std::string Trim(const std::string& str);
+
+    std::set<std::string> SplitToSet(const std::string& str);
 } // namespace utils
