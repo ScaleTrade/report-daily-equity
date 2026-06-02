@@ -33,7 +33,7 @@ extern "C" void CreateReport(rapidjson::Value&                   request,
         RequestValidator::ValidateRequest(report_type, request, server);
 
     if (!validation_result.allowed) {
-        std::cerr << "[DepositWithdrawalReportInterface]: " << validation_result.code
+        std::cerr << "[DailyEquityReportInterface]: " << validation_result.code
                   << ", message: " << validation_result.message << std::endl;
 
         const Node report =
@@ -48,7 +48,7 @@ extern "C" void CreateReport(rapidjson::Value&                   request,
         return;
     }
 
-    std::cout << "[DepositWithdrawalReportInterface]: " << validation_result.code
+    std::cout << "[DailyEquityReportInterface]: " << validation_result.code
               << ", message: " << validation_result.message << std::endl;
 
     // Execution
