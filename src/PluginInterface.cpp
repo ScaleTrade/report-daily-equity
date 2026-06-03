@@ -106,7 +106,7 @@ extern "C" void CreateReport(rapidjson::Value&                   request,
     table_builder.AddColumn({"floating_pl", "FLOATING_PL", 7, search_filter});
     table_builder.AddColumn({"credit", "CREDIT", 8, search_filter});
     table_builder.AddColumn({"equity", "EQUITY", 9, search_filter});
-    table_builder.AddColumn({"profit", "AMOUNT", 10, search_filter});
+    table_builder.AddColumn({"profit", "PROFIT", 10, search_filter});
     table_builder.AddColumn({"storage", "SWAP", 11, search_filter});
     table_builder.AddColumn({"commission", "COMMISSION", 12, search_filter});
     table_builder.AddColumn({"margin", "MARGIN", 13, search_filter});
